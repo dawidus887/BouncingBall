@@ -46,14 +46,27 @@ window.RenderFrame += eventArgs =>
         0.0f, 0.5f, 0.0f
     };
 
+    float[] color =
+    {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f
+    };
+
     var vao = GL.GenVertexArray();
     var vertices = GL.GenBuffer();
+    var colors = GL.GenBuffer();
 
     GL.BindVertexArray(vao);
     GL.BindBuffer(BufferTarget.ArrayBuffer, vertices);
-    GL.BufferData(BufferTarget.ArrayBuffer, 36, verts, BufferUsageHint.StaticDraw);
+    GL.BufferData(BufferTarget.ArrayBuffer, verts.Length * sizeof(float), verts, BufferUsageHint.StaticCopy);
     GL.EnableVertexAttribArray(0);
     GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+
+    GL.BindBuffer(BufferTarget.ArrayBuffer, colors);
+    GL.BufferData(BufferTarget.ArrayBuffer, color.Length * sizeof(float), color, BufferUsageHint.StaticCopy);
+    GL.EnableVertexAttribArray(1);
+    GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 0, 0);
 
     GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
@@ -61,6 +74,7 @@ window.RenderFrame += eventArgs =>
     GL.BindVertexArray(0);
     GL.DeleteVertexArray(vao);
     GL.DeleteBuffer(vertices);
+    GL.DeleteBuffer(colors);
 
     #endregion
 
